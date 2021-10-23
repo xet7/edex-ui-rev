@@ -141,13 +141,17 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2.0.1
+      with:
+        version: 6.19.0
     - name: Get pnpm cache directory
       id: pnpm-cache
       run: |
         echo "::set-output name=dir::$(pnpm config get cache)"
     - uses: actions/cache@v2
       with:
-        path: ${{ steps.npm-cache.outputs.dir }}
+        path: ${{ steps.pnpm-cache.outputs.dir }}
         key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
     - name: Cache Electron binaries
       uses: actions/cache@v2
@@ -162,12 +166,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14
-    - name: Setup pnpm and install dependencies
-      uses: pnpm/action-setup@v2.0.1
-      with:
-        version: 6.19.0
-        run_install: true
-    - name: npm build
+    - name: Install pnpm dependencies
+      run: pnpm install
+    - name: pnpm build
       run: pnpm build-windows
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
