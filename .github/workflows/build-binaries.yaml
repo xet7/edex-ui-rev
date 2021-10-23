@@ -166,8 +166,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '14'
-        cache: 'cache-node-modules'
-        cache-dependency-path: '**/pnpm-lock.yaml'
+        cache: 'pnpm'
     - name: Install pnpm dependencies
       run: pnpm install
     - name: pnpm build
