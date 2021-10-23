@@ -36,10 +36,15 @@ version-resolver:
       - 'major'
   minor:
     labels:
-      - 'minor'
+      - 'feature'
+      - 'enhancement'
   patch:
     labels:
-      - 'patch'
+      - 'chore'
+      - 'docs'
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
   default: patch
 template: |
   ## Changes
