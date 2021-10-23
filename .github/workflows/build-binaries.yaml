@@ -142,16 +142,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup pnpm
+      id: setup-pnpm
       uses: pnpm/action-setup@v2.0.1
       with:
         version: 6.19.0
-    - name: Get pnpm cache directory
-      id: pnpm-cache
-      run: |
-        echo "::set-output name=dir::$(pnpm config get cache)"
     - uses: actions/cache@v2
       with:
-        path: ${{ steps.pnpm-cache.outputs.dir }}
+        path: ${{ steps.setup-pnpm.outputs.dest }}
         key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
     - name: Cache Electron binaries
       uses: actions/cache@v2
