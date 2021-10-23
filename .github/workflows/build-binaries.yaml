@@ -146,10 +146,13 @@ jobs:
       uses: pnpm/action-setup@v2.0.1
       with:
         version: 6.19.0
-    - uses: actions/cache@v2
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
       with:
-        path: ${{ steps.setup-pnpm.outputs.dest }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
     - name: Cache Electron binaries
       uses: actions/cache@v2
       env:
@@ -160,9 +163,11 @@ jobs:
         path: ~/AppData/Local/electron/Cache
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
-        node-version: 14
+        node-version: '14'
+        cache: 'cache-node-modules'
+        cache-dependency-path: '**/pnpm-lock.yaml'
     - name: Install pnpm dependencies
       run: pnpm install
     - name: pnpm build
@@ -197,9 +202,9 @@ jobs:
         path: ~/Library/Caches/electron
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
-        node-version: 14
+        node-version: '14'
     - name: Setup pnpm and install dependencies
       uses: pnpm/action-setup@v2.0.1
       with:
